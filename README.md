@@ -1,4 +1,8 @@
-# Цель проекта
+<a href="https://travis-ci.com/github/Sotnikov89/restChat">
+  <img src="https://travis-ci.com/Sotnikov89/restChat.svg?branch=master" />
+</a>
+
+# Цель проекта 
 Проект создавался для отработки изученного материала по построению rest сервисов. Проект написан на Spring Boot.
 # Описание проекта
 Проект представляет чат с комнатами. Основные сущности модели: Message, Room и User.
