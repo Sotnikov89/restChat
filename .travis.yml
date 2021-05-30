@@ -2,6 +2,12 @@ language: java
 jdk:
   - openjdk11
 
+services:
+  - postgresql
+
+before_install:
+  - psql -c 'create database chat;' -U postgres
+
 sudo: false
 
 # Отправлять уведомление на почту youremail@smtp.ru(Изменить на свою) если сборка упала
