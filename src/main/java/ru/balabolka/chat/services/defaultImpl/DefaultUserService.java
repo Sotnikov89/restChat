@@ -39,4 +39,9 @@ public class DefaultUserService implements UserService {
         }
         return rsl;
     }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
 }
