@@ -41,13 +41,13 @@ public class AuthController {
     }
 
     @Data
-    private static class AuthRequest{
+    private static class AuthRequest {
         private String email;
         private String password;
     }
     @Data
     @AllArgsConstructor
-    private static class AuthResponse{
+    private static class AuthResponse {
         private String token;
     }
 }

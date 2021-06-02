@@ -47,20 +47,20 @@ public class RoomController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAuthority('message:read')")
+    @PreAuthorize("hasAuthority('room:write')")
     public ResponseEntity<Void> update(@RequestBody Room room) {
         roomService.save(room);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{roomId}/user/{userId}")
-    @PreAuthorize("hasAuthority('message:read')")
+    @PreAuthorize("hasAuthority('room:write')")
     public ResponseEntity<Void> addOrDeleteUserFromRoom(@PathVariable Long roomId, @PathVariable Long userId) {
         return new ResponseEntity<>(roomService.addOrDeleteUserFromRoom(roomId, userId) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAuthority('message:read')")
+    @PreAuthorize("hasAuthority('room:write')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         return new ResponseEntity<>(roomService.delete(id) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }

@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
 import java.util.Date;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -20,11 +22,11 @@ import static org.springframework.util.StringUtils.hasText;
 @Component
 public class JwtProvider {
 
-    @Value("$(jwt.secret)")
+    @Value("${jwt.secret}")
     private String secretKey;
     @Value("#{new Long('${jwt.validDays}')}")
     private long validDays;
-    @Value("$(jwt.header)")
+    @Value("${jwt.header}")
     private String authHeader;
 
     private final UserDetailsService userDetailsService;
@@ -33,9 +35,14 @@ public class JwtProvider {
         this.userDetailsService = userDetailsService;
     }
 
-    public String generateToken(String login, String role) {
-        Claims claims = Jwts.claims().setSubject(login);
-        claims.put("ROLE", role);
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
+
+    public String generateToken(String email, String role) {
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("role", role);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())
@@ -55,12 +62,9 @@ public class JwtProvider {
         return rsl;
     }
 
-    public String getUserName(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserName(token));
+        String email = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
